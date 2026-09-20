@@ -46,6 +46,25 @@ Node.js 22 (voir `.nvmrc`). Le site tourne sur http://localhost:3000.
 | `pnpm format`    | Prettier (écriture) — `format:check` en CI          |
 | `pnpm ci`        | Enchaîne lint, typecheck, test et build comme la CI |
 
+Tests end-to-end : `pnpm build && pnpm test:e2e` (Playwright démarre `pnpm start`). Pour réutiliser un Chromium système au lieu du téléchargement Playwright : `PLAYWRIGHT_CHROMIUM_EXECUTABLE=/chemin/vers/chrome pnpm test:e2e`.
+
+## Pages
+
+| Route                | Contenu                                                                                                                                         |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/`                  | Hero, écosystème NEXRAD, cartes produits, « Dictez. Relisez. Validez. », workflow radiologique, QR Scan, technologie, FAQ                       |
+| `/radiologie`        | Plateforme radiologique : AI, RIS, Bridge, PACS, viewer, DICOM, worklist, HL7, outils                                                           |
+| `/radiologie/ai`     | Modes Brut / Grand titre / Secrétaire / Mixte (démo interactive), assistance au diagnostic, modèles, RECIST / Cheson, écho rapide, calculateurs |
+| `/radiologie/ris`    | Modules du RIS, worklist DICOM, PACS (Orthanc), viewer (OHIF), HL7 ADT / ORM / ORU                                                              |
+| `/radiologie/bridge` | Application desktop, fonctionnalités, diagramme Cloud → Bridge → PACS / RIS / Word                                                              |
+| `/nextoubib`         | Consultation dictée, ordonnances, documents, QR Scan, OCR, triage, dossier patient, cabinet                                                     |
+| `/solutions`         | Combinaisons par profil (radiologue, centre, hôpital, généraliste, spécialiste)                                                                 |
+| `/technology`        | Piliers techniques, architecture, interopérabilité, sécurité                                                                                    |
+| `/pricing`           | Offres AI / RIS / Nextoubib / Établissement, sur devis                                                                                          |
+| `/demo`              | Formulaire de démonstration (React Hook Form + Zod + Server Action)                                                                             |
+| `/resources`         | Tutoriels, documentation, calculateurs, modèles                                                                                                 |
+| `/about`             | Vision, mission, origine médicale                                                                                                               |
+
 ## Architecture
 
 ```text
@@ -126,6 +145,15 @@ Commits en [Conventional Commits](https://www.conventionalcommits.org/) : `feat(
 Protections de branches recommandées (à activer dans les réglages GitHub) : PR obligatoire, checks `Branch policy` et `Lint, typecheck, test, build` requis, branche à jour avant merge, conversations résolues, pas de force-push ni de suppression sur `main` et `develop`, au moins 1 approbation sur `main`.
 
 Déploiement cible : Vercel connecté au dépôt — `develop` → preview/staging, `main` → production. Les Preview Deployments des PR permettent de valider design, responsive et performance avant merge. Aucune modification DNS sans validation explicite.
+
+## Limites connues et éléments à connecter
+
+- **Audit de nexrad.org** : le site actuel n'était pas accessible depuis l'environnement de développement (politique réseau). La charte (couleurs, logo, captures produit) n'a donc pas pu être extraite : la palette est définie dans `src/app/globals.css` et le logo dans `src/components/ui/logo.tsx` pour être remplacés en un point par les assets officiels.
+- **Captures produit** : les mockups (`src/components/diagrams/*-mockup.tsx`, `patient-timeline.tsx`) sont illustratifs et doivent être remplacés par de vraies captures dès qu'elles sont disponibles.
+- **Tarifs** : aucun montant n'est affiché (« Sur devis »). Renseigner `src/data/pricing.ts` uniquement avec des tarifs officiels vérifiés.
+- **Formulaire de démo** : sans `DEMO_WEBHOOK_URL`, les demandes sont validées puis journalisées côté serveur. Brancher un CRM, un e-mail ou un webhook via `src/lib/demo-delivery.ts`.
+- **Lien « Connexion »** : pointe vers `NEXT_PUBLIC_APP_URL` (par défaut nexrad.org).
+- **Pages légales** (mentions légales, confidentialité) : non créées faute de données vérifiées sur l'entité juridique.
 
 ## Conventions
 
