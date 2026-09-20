@@ -13,6 +13,10 @@ export default defineConfig({
   use: {
     baseURL: process.env.PLAYWRIGHT_BASE_URL ?? "http://127.0.0.1:3000",
     trace: "on-first-retry",
+    // Optional: reuse a system Chromium instead of the Playwright download.
+    launchOptions: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE
+      ? { executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE }
+      : undefined,
   },
   webServer: process.env.PLAYWRIGHT_BASE_URL
     ? undefined
@@ -24,6 +28,6 @@ export default defineConfig({
       },
   projects: [
     { name: "desktop", use: { ...devices["Desktop Chrome"] } },
-    { name: "mobile", use: { ...devices["iPhone 13"] } },
+    { name: "mobile", use: { ...devices["Pixel 7"] } },
   ],
 });
